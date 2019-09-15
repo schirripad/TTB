@@ -3,51 +3,39 @@ package edu.moravian.schirripad.ttb;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.Hashtable;
 import java.util.LinkedList;
 
-import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
-import org.apache.pdfbox.pdmodel.graphics.PDXObject;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 public class PDFConverter {
 
-	public static void convert(String file) throws InvalidPasswordException, IOException {
-		PDDocument pdf = PDDocument.load(new File(file));
+	public static void convert(String file, String output) throws InvalidPasswordException, IOException {
+		convert(new File(file), new File(output));
+	}
 
-		Iterable<COSName> names = pdf.getPage(0).getResources().getXObjectNames();
-		PDPageTree tree = pdf.getPages();
-		Iterator<PDPage> pages = tree.iterator();
-		while (pages.hasNext()) {
-			PDPage page = pages.next();
-			Iterator<COSName> it = page.getResources().getXObjectNames().iterator();
-			while (it.hasNext()) {
-				COSName name = it.next();
-				PDXObject obj = pdf.getPage(0).getResources().getXObject(name);
-				if (obj instanceof PDImageXObject) {
-					PDImageXObject img = (PDImageXObject) obj;
-					//Store images with index of page, so to be called later when new page is created
-				}
-			}
-		}
-
+	public static void convert(File f, File output) throws InvalidPasswordException, IOException {
+		// Load pdf
+		PDDocument pdf = PDDocument.load(f);
+		// Strip the text from the pdf
 		PDFTextStripper textStripper = new PDFTextStripper();
 		String pdfText = textStripper.getText(pdf);
+		// Get all images from the pdf, assigned by their page number
+		Hashtable<Integer, LinkedList<Image>> images = PDFImageExtractor.extractImages(pdf);
+		// Cleanup
 		pdf.close();
 		pdf = null;
 		textStripper = null;
 		System.runFinalization();
 		System.gc();
 		// CODEAT PDF->String done
+		// Attempt to parse the string representation of the pdf text into a series of
+		// braille characters
 		LinkedList<LinkedList<Image>> text = StringParser.parseString(pdfText);
-		CharacterBinder binder = new CharacterBinder(297, 210);
-		// TODO Bind incrementally, create each page and export them separately, so as
-		// to free up resources
+		// Bind the characters together into one image
+		CharacterBinder binder = new CharacterBinder(210, 297, output);
 		if (text == null) {
 			System.err.println("StringParser returned null, please check that the pdf is valid, and contains text");
 			System.exit(-1);

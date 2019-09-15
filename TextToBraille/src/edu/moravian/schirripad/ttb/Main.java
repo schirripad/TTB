@@ -7,13 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
-import org.apache.pdfbox.text.PDFTextStripper;
 
 public class Main {
 
@@ -36,7 +33,7 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		PDFConverter.convert(args[0]);
+		PDFConverter.convert(new File(args[0]), out);
 	}
 
 	private static void loadCharacterSet() throws IOException {
@@ -174,20 +171,4 @@ public class Main {
 		return characterSet;
 	}
 
-	private static int pCount = 0;
-
-	public static void pageDone(Image page) {
-		System.out.println("Writing: output/" + pCount + ".png");
-		try {
-			ImageIO.write((RenderedImage) page, "PNG", new FileOutputStream(new File("output/" + pCount + ".png")));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		page = null;
-		System.runFinalization();
-		System.gc();
-		pCount++;
-	}
 }
