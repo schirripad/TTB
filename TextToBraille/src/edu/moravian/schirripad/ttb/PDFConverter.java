@@ -10,6 +10,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.text.PDFTextStripper;
 
+import edu.moravian.schirripad.ttb.characters.CharacterSetLoader;
+
 public class PDFConverter {
 
 	public static void convert(String file, String output) throws InvalidPasswordException, IOException {
@@ -17,6 +19,30 @@ public class PDFConverter {
 	}
 
 	public static void convert(File f, File output) throws InvalidPasswordException, IOException {
+		convert(f, output, 210, 297);
+	}
+
+	/**
+	 * Convert a pdf file to braille, and export the outcome
+	 * 
+	 * @param f
+	 *            The PDF File to convert
+	 * @param output
+	 *            A directory where output should be exported to
+	 * @param width
+	 *            The width of each braille page in millimeters
+	 * @param height
+	 *            The height of each braille page in millimeters
+	 * @throws InvalidPasswordException
+	 * @throws IOException
+	 */
+	public static void convert(File f, File output, int width, int height)
+			throws InvalidPasswordException, IOException {
+		try {
+			CharacterSetLoader.loadCharacterSet(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		// Load pdf
 		PDDocument pdf = PDDocument.load(f);
 		// Strip the text from the pdf
@@ -35,10 +61,10 @@ public class PDFConverter {
 		// braille characters
 		LinkedList<LinkedList<Image>> text = StringParser.parseString(pdfText);
 		// Bind the characters together into one image
-		CharacterBinder binder = new CharacterBinder(210, 297, output);
-		if (text == null) {
+		CharacterBinder binder = new CharacterBinder(width, height, output);
+		if (text == null || text.size() == 0) {
 			System.err.println("StringParser returned null, please check that the pdf is valid, and contains text");
-			System.exit(-1);
+			throw new NullPointerException("StringParser returned null");
 		}
 		binder.bindCharacters(text);
 	}

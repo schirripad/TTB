@@ -2,6 +2,8 @@ package edu.moravian.schirripad.ttb.gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -108,7 +110,15 @@ public class MainUI extends JFrame implements ActionListener {
 		JPanel panel_4 = new JPanel();
 		panel.add(panel_4, BorderLayout.NORTH);
 
-		JLabel lblPagePreview = new JLabel("Page Preview");
+		JLabel lblPagePreview = new JLabel("Page Preview") {
+			@Override
+			public void paint(Graphics g0) {
+				Graphics2D g = (Graphics2D) g0;
+				// TODO Generate image for preview, however, look into AWT Threading so it
+				// doesn't block the main thread
+			}
+		};
+
 		// TODO Add preview image
 		panel_4.add(lblPagePreview);
 
@@ -191,6 +201,7 @@ public class MainUI extends JFrame implements ActionListener {
 			int resp0 = fc.showOpenDialog(this);
 			if (resp0 == JFileChooser.APPROVE_OPTION) {
 				pdf = fc.getSelectedFile();
+				System.out.println(pdf.getPath());
 				textField.setText(pdf.getPath());
 			}
 			break;
@@ -205,8 +216,10 @@ public class MainUI extends JFrame implements ActionListener {
 				break;
 			}
 			try {
+				progressBar.setIndeterminate(true);
 				PDFConverter.convert(pdf, output);
-				//TODO Change CharacterBinder's design pattern for returning pages into an event based one, so multiple interfaces can be used to interact
+				progressBar.setIndeterminate(false);
+				JOptionPane.showMessageDialog(this, "Conversion Complete!");
 			} catch (Exception e0) {
 				e0.printStackTrace();
 				JOptionPane.showMessageDialog(this, "Exception: " + e0.getMessage());

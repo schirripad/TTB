@@ -91,9 +91,17 @@ public class CharacterBinder {
 					// TODO REDO
 					// Draw pictures before text
 					if (imgs != null && imgs.size() > 0) {
+						int charHeight = i.getHeight(null);
 						for (Image img : imgs) {
-							if ((hcount + img.getHeight(null)) / i.getHeight(null) > columnCap) {
+							if ((hcount + img.getHeight(null)) / charHeight > columnCap) {
 								// Create new page
+								PageWriter.pageDone(page, out);
+								page = new BufferedImage((int) (width * ratio), (int) (height * ratio),
+										BufferedImage.TYPE_INT_RGB);
+								g = (Graphics2D) page.getGraphics();
+								wcount = 0;
+								hcount = 0;
+								pcount++;
 							}
 							if (wcount + img.getWidth(null) / i.getWidth(null) > rowCap) {
 								wcount = 0;
@@ -108,7 +116,7 @@ public class CharacterBinder {
 							}
 							wcount = img.getWidth(null);
 						}
-						hcount = hcount / i.getHeight(null);
+						hcount = hcount / charHeight;
 					}
 				}
 				// Draw characters

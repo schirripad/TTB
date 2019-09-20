@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
+import edu.moravian.schirripad.ttb.characters.CharacterSetLoader;
+
 public class StringParser {
 
 	/**
@@ -18,7 +20,7 @@ public class StringParser {
 		char[] asChars = text.toCharArray();
 		LinkedList<LinkedList<Image>> total = new LinkedList<LinkedList<Image>>();
 		LinkedList<Image> line = new LinkedList<Image>();
-		final Hashtable<Character, Image> charSet = Main.getCharSet();
+		final Hashtable<Character, Image> charSet = CharacterSetLoader.getCharacterSet();
 		for (char c : asChars) {
 			if (c == '\n') {
 				total.add(line);
