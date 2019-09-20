@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -59,6 +60,7 @@ public class MainUI extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public MainUI() {
+		setTitle("Text to Braille");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
@@ -68,8 +70,10 @@ public class MainUI extends JFrame implements ActionListener {
 		setJMenuBar(menuBar);
 
 		JMenu mnEdit = new JMenu("Preferences");
-		mnEdit.setActionCommand("pref");
-		mnEdit.addActionListener(this);
+		JMenuItem prefEdit = new JMenuItem("Edit");
+		prefEdit.setActionCommand("pref");
+		prefEdit.addActionListener(this);
+		mnEdit.add(prefEdit);
 		menuBar.add(mnEdit);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -188,6 +192,8 @@ public class MainUI extends JFrame implements ActionListener {
 		// convert
 		switch (e.getActionCommand()) {
 		case "pref":
+			this.setFocusableWindowState(false);
+			new PreferenceUI(this);
 			break;
 		case "selOut":
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
