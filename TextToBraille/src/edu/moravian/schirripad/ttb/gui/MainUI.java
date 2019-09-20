@@ -35,6 +35,7 @@ public class MainUI extends JFrame implements ActionListener {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JProgressBar progressBar = new JProgressBar();
+	private JSpinner spinnerWidth, spinnerHeight;
 	private File pdf, output;
 	private JFileChooser fc;
 
@@ -148,14 +149,14 @@ public class MainUI extends JFrame implements ActionListener {
 		JLabel lblWidth = new JLabel("Width:");
 		panel_1.add(lblWidth, "cell 0 4");
 
-		JSpinner spinnerWidth = new JSpinner(
+		spinnerWidth = new JSpinner(
 				new SpinnerNumberModel(Integer.valueOf(50), Integer.valueOf(1), null, Integer.valueOf(1)));
 		panel_1.add(spinnerWidth, "cell 1 4");
 
 		JLabel lblHeight = new JLabel("Height:");
 		panel_1.add(lblHeight, "cell 0 5");
 
-		JSpinner spinnerHeight = new JSpinner(
+		spinnerHeight = new JSpinner(
 				new SpinnerNumberModel(Integer.valueOf(50), Integer.valueOf(1), null, Integer.valueOf(1)));
 		panel_1.add(spinnerHeight, "cell 1 5");
 
@@ -217,7 +218,7 @@ public class MainUI extends JFrame implements ActionListener {
 			}
 			try {
 				progressBar.setIndeterminate(true);
-				PDFConverter.convert(pdf, output);
+				PDFConverter.convert(pdf, output, (int) spinnerWidth.getValue(), (int) spinnerHeight.getValue());
 				progressBar.setIndeterminate(false);
 				JOptionPane.showMessageDialog(this, "Conversion Complete!");
 			} catch (Exception e0) {
