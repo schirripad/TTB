@@ -19,7 +19,7 @@ public class PDFConverter {
 	}
 
 	public static void convert(File f, File output) throws InvalidPasswordException, IOException {
-		convert(f, output, 210, 297);
+		convert(f, output, 210, 297, true);
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class PDFConverter {
 	 * @throws InvalidPasswordException
 	 * @throws IOException
 	 */
-	public static void convert(File f, File output, int width, int height)
+	public static void convert(File f, File output, int width, int height, boolean convImages)
 			throws InvalidPasswordException, IOException {
 		try {
 			CharacterSetLoader.loadCharacterSet(null);
@@ -48,6 +48,7 @@ public class PDFConverter {
 		// Strip the text from the pdf
 		PDFTextStripper textStripper = new PDFTextStripper();
 		String pdfText = textStripper.getText(pdf);
+
 		// Get all images from the pdf, assigned by their page number
 		Hashtable<Integer, LinkedList<Image>> images = PDFImageExtractor.extractImages(pdf);
 		// Cleanup
@@ -66,7 +67,11 @@ public class PDFConverter {
 			System.err.println("StringParser returned null, please check that the pdf is valid, and contains text");
 			throw new NullPointerException("StringParser returned null");
 		}
-		binder.bindCharacters(text);
+		if (convImages) {
+			System.out.println("Include Images");
+			binder.bindCharacters(text, images);
+		}else
+			binder.bindCharacters(text);
 	}
 
 }

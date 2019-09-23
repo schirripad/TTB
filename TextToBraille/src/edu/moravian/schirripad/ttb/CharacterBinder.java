@@ -87,13 +87,14 @@ public class CharacterBinder {
 							imgs = images.get(pcount);
 					}
 				}
-				if (wcount == 0) {
+				if (wcount == 0 &&  hcount  == 0) {
 					// TODO REDO
 					// Draw pictures before text
 					if (imgs != null && imgs.size() > 0) {
+						int imgTallest = 0;
 						int charHeight = i.getHeight(null);
 						for (Image img : imgs) {
-							if ((hcount + img.getHeight(null)) / charHeight > columnCap) {
+							if ((hcount + img.getHeight(null) / charHeight) > columnCap) {
 								// Create new page
 								PageWriter.pageDone(page, out);
 								page = new BufferedImage((int) (width * ratio), (int) (height * ratio),
@@ -103,20 +104,22 @@ public class CharacterBinder {
 								hcount = 0;
 								pcount++;
 							}
-							if (wcount + img.getWidth(null) / i.getWidth(null) > rowCap) {
-								wcount = 0;
-								// Move down one line of images
-							}
 							g.drawImage(img, hcount, wcount, null);
+							int imgHeight = img.getHeight(null);
+							if (imgHeight > imgTallest)
+								imgTallest = imgHeight;
+							// Check width
 							if (wcount > page.getWidth(null)) {
 								// Need to record tallest image value so as to create the correct variable
 								// height reference
-								hcount = img.getHeight(null);
+								hcount += imgTallest;
+								imgTallest = 0;
 								wcount = 0;
 							}
-							wcount = img.getWidth(null);
+							wcount += img.getWidth(null);
 						}
 						hcount = hcount / charHeight;
+						wcount = 0;
 					}
 				}
 				// Draw characters

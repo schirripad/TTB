@@ -35,6 +35,7 @@ public class MainUI extends JFrame implements ActionListener {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
+	private JCheckBox chckbxConvertImages;
 	private JProgressBar progressBar = new JProgressBar();
 	private JSpinner spinnerWidth, spinnerHeight;
 	private File pdf, output;
@@ -137,7 +138,7 @@ public class MainUI extends JFrame implements ActionListener {
 		JLabel lblDocumentOptions = new JLabel("Document Options");
 		panel_1.add(lblDocumentOptions, "cell 1 0,alignx left,aligny center");
 
-		JCheckBox chckbxConvertImages = new JCheckBox("Convert Images");
+		chckbxConvertImages = new JCheckBox("Convert Images");
 		panel_1.add(chckbxConvertImages, "cell 1 1");
 
 		JLabel lblPages = new JLabel("Pages:");
@@ -155,6 +156,7 @@ public class MainUI extends JFrame implements ActionListener {
 
 		spinnerWidth = new JSpinner(
 				new SpinnerNumberModel(Integer.valueOf(50), Integer.valueOf(1), null, Integer.valueOf(1)));
+		((JSpinner.DefaultEditor) spinnerWidth.getEditor()).getTextField().setColumns(4);
 		panel_1.add(spinnerWidth, "cell 1 4");
 
 		JLabel lblHeight = new JLabel("Height:");
@@ -162,6 +164,7 @@ public class MainUI extends JFrame implements ActionListener {
 
 		spinnerHeight = new JSpinner(
 				new SpinnerNumberModel(Integer.valueOf(50), Integer.valueOf(1), null, Integer.valueOf(1)));
+		((JSpinner.DefaultEditor) spinnerHeight.getEditor()).getTextField().setColumns(4);
 		panel_1.add(spinnerHeight, "cell 1 5");
 
 		JPanel panel_2 = new JPanel();
@@ -224,7 +227,7 @@ public class MainUI extends JFrame implements ActionListener {
 			}
 			try {
 				progressBar.setIndeterminate(true);
-				PDFConverter.convert(pdf, output, (int) spinnerWidth.getValue(), (int) spinnerHeight.getValue());
+				PDFConverter.convert(pdf, output, (int) spinnerWidth.getValue(), (int) spinnerHeight.getValue(), chckbxConvertImages.isSelected());
 				progressBar.setIndeterminate(false);
 				JOptionPane.showMessageDialog(this, "Conversion Complete!");
 			} catch (Exception e0) {
