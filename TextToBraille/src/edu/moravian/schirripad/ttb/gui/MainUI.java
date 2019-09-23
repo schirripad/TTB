@@ -23,6 +23,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import edu.moravian.schirripad.ttb.PDFConverter;
@@ -216,6 +217,10 @@ public class MainUI extends JFrame implements ActionListener {
 			}
 			break;
 		case "convert":
+			// Check if already running
+			if (progressBar.isIndeterminate()) {
+				break;
+			}
 			// Check files
 			if (!output.exists() || !output.isDirectory()) {
 				JOptionPane.showMessageDialog(this, "Output directory does not exist!");
@@ -226,10 +231,20 @@ public class MainUI extends JFrame implements ActionListener {
 				break;
 			}
 			try {
-				progressBar.setIndeterminate(true);
-				PDFConverter.convert(pdf, output, (int) spinnerWidth.getValue(), (int) spinnerHeight.getValue(), chckbxConvertImages.isSelected());
-				progressBar.setIndeterminate(false);
-				JOptionPane.showMessageDialog(this, "Conversion Complete!");
+				SwingWorker sw = new SwingWorker<Void, Void>() {
+
+					@Override
+					protected Void doInBackground() throws Exception {
+						progressBar.setIndeterminate(true);
+						PDFConverter.convert(pdf, output, (int) spinnerWidth.getValue(), (int) spinnerHeight.getValue(),
+								chckbxConvertImages.isSelected());
+						progressBar.setIndeterminate(false);
+						JOptionPane.showMessageDialog(null, "Conversion Complete!");
+						return null;
+					}
+
+				};
+				sw.execute();
 			} catch (Exception e0) {
 				e0.printStackTrace();
 				JOptionPane.showMessageDialog(this, "Exception: " + e0.getMessage());
