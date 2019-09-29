@@ -33,6 +33,8 @@ public class PDFConverter {
 	 *            The width of each braille page in millimeters
 	 * @param height
 	 *            The height of each braille page in millimeters
+	 * @param convImages
+	 *            Whether or not to convert images along with text
 	 * @throws InvalidPasswordException
 	 * @throws IOException
 	 */
@@ -47,23 +49,28 @@ public class PDFConverter {
 		PDDocument pdf = PDDocument.load(f);
 		// Strip the text from the pdf
 		PDFTextStripper textStripper = new PDFTextStripper();
+		System.out.println("Stripping Text");
 		String pdfText = textStripper.getText(pdf);
 
 		// Get all images from the pdf, assigned by their page number
 		PDFImageExtractor extractor = new PDFImageExtractor();
+		System.out.println("Extracting Images");
 		Hashtable<Integer, LinkedList<PositionedImage>> images = extractor.extractImages(pdf);
 		// Cleanup
+		System.out.println("Cleaning Up");
 		extractor = null;
 		pdf.close();
 		pdf = null;
-		textStripper = null;
 		System.runFinalization();
 		System.gc();
 		// CODEAT PDF->String done
 		// Attempt to parse the string representation of the pdf text into a series of
 		// braille characters
-		LinkedList<LinkedList<Image>> text = StringParser.parseString(pdfText);
+		System.out.println("Parsing Characters");
+		LinkedList<LinkedList<Image>> text = StringParser.parseString(pdfText, textStripper.getPageEnd());
+		textStripper = null;
 		// Bind the characters together into one image
+		System.out.println("Binding");
 		CharacterBinder binder = new CharacterBinder(width, height, output);
 		if (text == null || text.size() == 0) {
 			System.err.println("StringParser returned null, please check that the pdf is valid, and contains text");

@@ -1,6 +1,5 @@
 package edu.moravian.schirripad.ttb;
 
-import java.awt.Image;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Iterator;
