@@ -60,10 +60,10 @@ public class CharacterBinder {
 	 *            from the pdf, so that the key to each value is the page number the
 	 *            image was extracted from
 	 */
-	public void bindCharacters(LinkedList<LinkedList<Image>> chars, Hashtable<Integer, LinkedList<Image>> images) {
+	public void bindCharacters(LinkedList<LinkedList<Image>> chars, Hashtable<Integer, LinkedList<PositionedImage>> images) {
 		double ratio = chars.get(0).get(0).getHeight(null) / CELL_HEIGHT;
 		LinkedList<Image> bound = new LinkedList<Image>();
-		LinkedList<Image> imgs = null;
+		LinkedList<PositionedImage> imgs = null;
 		if (images != null)
 			imgs = images.get(0);
 		Image page = new BufferedImage((int) (width * ratio), (int) (height * ratio), BufferedImage.TYPE_INT_RGB);
@@ -88,12 +88,12 @@ public class CharacterBinder {
 					}
 				}
 				if (wcount == 0 &&  hcount  == 0) {
-					// TODO REDO
+					// TODO REDO, add in code for handling X/Y positioning
 					// Draw pictures before text
 					if (imgs != null && imgs.size() > 0) {
 						int imgTallest = 0;
 						int charHeight = i.getHeight(null);
-						for (Image img : imgs) {
+						for (PositionedImage img : imgs) {
 							if ((hcount + img.getHeight(null) / charHeight) > columnCap) {
 								// Create new page
 								PageWriter.pageDone(page, out);

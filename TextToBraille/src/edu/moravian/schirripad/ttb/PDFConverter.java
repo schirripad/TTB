@@ -50,8 +50,10 @@ public class PDFConverter {
 		String pdfText = textStripper.getText(pdf);
 
 		// Get all images from the pdf, assigned by their page number
-		Hashtable<Integer, LinkedList<Image>> images = PDFImageExtractor.extractImages(pdf);
+		PDFImageExtractor extractor = new PDFImageExtractor();
+		Hashtable<Integer, LinkedList<PositionedImage>> images = extractor.extractImages(pdf);
 		// Cleanup
+		extractor = null;
 		pdf.close();
 		pdf = null;
 		textStripper = null;
@@ -70,7 +72,7 @@ public class PDFConverter {
 		if (convImages) {
 			System.out.println("Include Images");
 			binder.bindCharacters(text, images);
-		}else
+		} else
 			binder.bindCharacters(text);
 	}
 
