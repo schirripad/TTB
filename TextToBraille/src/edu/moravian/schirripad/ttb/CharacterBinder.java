@@ -54,7 +54,8 @@ public class CharacterBinder {
 	 *            from the pdf, so that the key to each value is the page number the
 	 *            image was extracted from
 	 */
-	public void bindCharacters(LinkedList<LinkedList<Image>> chars, Hashtable<Integer, LinkedList<PositionedImage>> images) {
+	public void bindCharacters(LinkedList<LinkedList<Image>> chars,
+			Hashtable<Integer, LinkedList<PositionedImage>> images) {
 		double ratio = chars.get(0).get(0).getHeight(null) / CELL_HEIGHT;
 		LinkedList<Image> bound = new LinkedList<Image>();
 		LinkedList<PositionedImage> imgs = null;
@@ -79,41 +80,6 @@ public class CharacterBinder {
 						pcount++;
 						if (images != null)
 							imgs = images.get(pcount);
-					}
-				}
-				if (wcount == 0 &&  hcount  == 0) {
-					// TODO REDO, add in code for handling X/Y positioning, build into character linkedlist
-					// Draw pictures before text
-					if (imgs != null && imgs.size() > 0) {
-						int imgTallest = 0;
-						int charHeight = i.getHeight(null);
-						for (PositionedImage img : imgs) {
-							if ((hcount + img.getHeight(null) / charHeight) > columnCap) {
-								// Create new page
-								PageWriter.pageDone(page, out);
-								page = new BufferedImage((int) (width * ratio), (int) (height * ratio),
-										BufferedImage.TYPE_INT_RGB);
-								g = (Graphics2D) page.getGraphics();
-								wcount = 0;
-								hcount = 0;
-								pcount++;
-							}
-							g.drawImage(img, hcount, wcount, null);
-							int imgHeight = img.getHeight(null);
-							if (imgHeight > imgTallest)
-								imgTallest = imgHeight;
-							// Check width
-							if (wcount > page.getWidth(null)) {
-								// Need to record tallest image value so as to create the correct variable
-								// height reference
-								hcount += imgTallest;
-								imgTallest = 0;
-								wcount = 0;
-							}
-							wcount += img.getWidth(null);
-						}
-						hcount = hcount / charHeight;
-						wcount = 0;
 					}
 				}
 				// Draw characters
