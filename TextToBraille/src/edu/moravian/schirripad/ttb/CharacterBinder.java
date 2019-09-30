@@ -81,7 +81,7 @@ public class CharacterBinder {
 						if (images != null)
 							imgs = images.get(pcount);
 					}
-				}
+				} 
 				// Draw characters
 				g.drawImage(i, wcount * i.getWidth(null), hcount * i.getHeight(null), null);
 				wcount++;
