@@ -19,7 +19,7 @@ public class PDFConverter {
 	}
 
 	public static void convert(File f, File output) throws InvalidPasswordException, IOException {
-		convert(f, output, 210, 297, true);
+		convert(f, output, 210, 297, null, true);
 	}
 
 	/**
@@ -38,10 +38,10 @@ public class PDFConverter {
 	 * @throws InvalidPasswordException
 	 * @throws IOException
 	 */
-	public static void convert(File f, File output, int width, int height, boolean convImages)
+	public static void convert(File f, File output, int width, int height, File charSet, boolean convImages)
 			throws InvalidPasswordException, IOException {
 		try {
-			CharacterSetLoader.loadCharacterSet(null);
+			CharacterSetLoader.loadCharacterSet(charSet);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

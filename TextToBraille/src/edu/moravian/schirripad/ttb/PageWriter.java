@@ -14,7 +14,7 @@ public class PageWriter {
 	private static int pCount = 0;
 
 	/**
-	 * Writes each individual Image to the output directory
+	 * Writes an Image (page) to the output directory
 	 * 
 	 * @param page
 	 *            Image representing full page of braille text

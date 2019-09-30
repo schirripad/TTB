@@ -22,15 +22,12 @@ public class PDFImageExtractor extends PDFStreamEngine {
 	private int page = 0;
 
 	public Hashtable<Integer, LinkedList<PositionedImage>> extractImages(PDDocument pdf) throws IOException {
-		// Hashtable<Integer, LinkedList<Image>> images = new Hashtable<Integer,
-		// LinkedList<Image>>();
 		images = new Hashtable<Integer, LinkedList<PositionedImage>>();
-		PDFStreamEngine pEngine = new PDFImageExtractor();
 		PDPageTree tree = pdf.getPages();
 		Iterator<PDPage> pages = tree.iterator();
 		while (pages.hasNext()) {
 			PDPage page = pages.next();
-			pEngine.processPage(page);
+			this.processPage(page);
 			this.page++;
 		}
 		return images;
@@ -38,6 +35,7 @@ public class PDFImageExtractor extends PDFStreamEngine {
 
 	@Override
 	protected void processOperator(Operator o, List<COSBase> operands) throws IOException {
+		System.out.println(o.getName());
 		if (o.getName().equals("Do")) {
 			COSName objName = (COSName) operands.get(0);
 			PDXObject obj = getResources().getXObject(objName);

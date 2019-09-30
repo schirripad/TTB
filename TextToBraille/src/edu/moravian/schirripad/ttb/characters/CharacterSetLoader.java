@@ -9,10 +9,11 @@ import java.util.Hashtable;
 import javax.imageio.ImageIO;
 
 public class CharacterSetLoader {
-	private static Hashtable<Character, Image> characterSet = new Hashtable<Character, Image>();
+	private static Hashtable<Character, Image> characterSet;
 	private static final File defaultDir = new File("assets/characters");
 
 	public static void loadCharacterSet(File dir) throws IOException {
+		characterSet = new Hashtable<Character, Image>();
 		if (dir == null || !dir.exists() || !dir.isDirectory()) {
 			dir = defaultDir;
 		}

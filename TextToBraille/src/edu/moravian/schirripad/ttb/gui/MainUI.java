@@ -41,6 +41,8 @@ public class MainUI extends JFrame implements ActionListener {
 	private JSpinner spinnerWidth, spinnerHeight;
 	private File pdf, output;
 	private JFileChooser fc;
+	private File charSet = null;
+	private static PreferenceUI pui;
 
 	/**
 	 * Launch the application.
@@ -50,6 +52,7 @@ public class MainUI extends JFrame implements ActionListener {
 			public void run() {
 				try {
 					MainUI frame = new MainUI();
+					pui = new PreferenceUI(frame);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -197,7 +200,7 @@ public class MainUI extends JFrame implements ActionListener {
 		switch (e.getActionCommand()) {
 		case "pref":
 			this.setFocusableWindowState(false);
-			new PreferenceUI(this);
+			pui.setVisible(true);
 			break;
 		case "selOut":
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -215,6 +218,9 @@ public class MainUI extends JFrame implements ActionListener {
 				System.out.println(pdf.getPath());
 				textField.setText(pdf.getPath());
 			}
+			break;
+		case "applySettings":
+			charSet = new File(pui.getSettings());
 			break;
 		case "convert":
 			// Check if already running
@@ -237,7 +243,7 @@ public class MainUI extends JFrame implements ActionListener {
 					protected Void doInBackground() throws Exception {
 						progressBar.setIndeterminate(true);
 						PDFConverter.convert(pdf, output, (int) spinnerWidth.getValue(), (int) spinnerHeight.getValue(),
-								chckbxConvertImages.isSelected());
+								charSet, chckbxConvertImages.isSelected());
 						progressBar.setIndeterminate(false);
 						JOptionPane.showMessageDialog(null, "Conversion Complete!");
 						return null;

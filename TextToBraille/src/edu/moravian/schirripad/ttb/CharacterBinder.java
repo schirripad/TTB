@@ -3,15 +3,9 @@ package edu.moravian.schirripad.ttb;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Hashtable;
 import java.util.LinkedList;
-
-import javax.imageio.ImageIO;
 
 public class CharacterBinder {
 
@@ -88,7 +82,7 @@ public class CharacterBinder {
 					}
 				}
 				if (wcount == 0 &&  hcount  == 0) {
-					// TODO REDO, add in code for handling X/Y positioning
+					// TODO REDO, add in code for handling X/Y positioning, build into character linkedlist
 					// Draw pictures before text
 					if (imgs != null && imgs.size() > 0) {
 						int imgTallest = 0;

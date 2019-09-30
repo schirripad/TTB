@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -47,9 +48,9 @@ public class PreferenceUI extends JFrame implements WindowListener {
 		contentPane.add(panel_1, BorderLayout.CENTER);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
 		gbl_panel_1.columnWidths = new int[] { 0, 0 };
-		gbl_panel_1.rowHeights = new int[] { 0, 0, 0, 0, 0 };
+		gbl_panel_1.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_panel_1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel_1.setLayout(gbl_panel_1);
 
 		textField = new JTextField();
@@ -68,8 +69,20 @@ public class PreferenceUI extends JFrame implements WindowListener {
 		gbc_btnSelect.gridy = 2;
 		panel_1.add(btnSelect, gbc_btnSelect);
 
+		JButton btnApply = new JButton("Apply");
+		btnApply.setActionCommand("applySettings");
+		btnApply.addActionListener(main);
+		GridBagConstraints gbc_btnApply = new GridBagConstraints();
+		gbc_btnApply.gridx = 0;
+		gbc_btnApply.gridy = 8;
+		panel_1.add(btnApply, gbc_btnApply);
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
+	}
+
+	public String getSettings() {
+		return textField.getText();
 	}
 
 	@Override
