@@ -23,8 +23,11 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.util.Matrix;
 import org.apache.pdfbox.util.Vector;
 
+import edu.moravian.edu.ttb.logging.Logger;
+
 public class PDFImageExtractor extends PDFStreamEngine {
 	private Hashtable<Integer, LinkedList<PositionedObject>> images;
+	private Logger log = new Logger("Extractor");
 	private int page = 0;
 	private Vector curDisp;
 
@@ -42,6 +45,7 @@ public class PDFImageExtractor extends PDFStreamEngine {
 
 	@Override
 	protected void processOperator(Operator o, List<COSBase> operands) throws IOException {
+		// Process all operator commands
 		// Tj - Unformatted Text
 		if (o.getName().equals("Tj")) {
 			for (COSBase obj : operands) {
@@ -51,9 +55,9 @@ public class PDFImageExtractor extends PDFStreamEngine {
 					if (images.get(page) == null) {
 						images.put(page, new LinkedList<PositionedObject>());
 					}
-					System.out.println("page:" + page + ":" + text);
+					log.debug("page:" + page + ":" + text);
 					for (COSBase op : operands) {
-						System.out.println("op:" + op.toString());
+						log.debug("op:" + op.toString());
 					}
 					images.get(page).add(t);
 				}
@@ -65,28 +69,33 @@ public class PDFImageExtractor extends PDFStreamEngine {
 				COSArray ar = (COSArray) operands.get(i);
 				for (COSBase obj : ar) {
 					if (obj instanceof COSString) {
+						// Strip text from formatting and send through again
 						List<COSBase> args = new ArrayList<COSBase>();
 						args.add(obj);
 						processOperator("Tj", args);
-					} else if (obj instanceof COSNumber) {
-						COSNumber num = (COSNumber) obj;
 					}
 				}
 			}
 		}
-		//Image
+		// Image
 		if (o.getName().equals("Do")) {
 			COSName objName = (COSName) operands.get(0);
 			PDXObject obj = getResources().getXObject(objName);
 			if (obj instanceof PDImageXObject) {
+				// Extract the image
 				PDImageXObject image = (PDImageXObject) obj;
+				// Obtain the images matrix
 				Matrix mat = getGraphicsState().getCurrentTransformationMatrix();
+				// Get the images (x,y) state
 				float x = mat.getTranslateX();
 				float y = mat.getTranslateY();
+				// Create a new positioned object with the (x,y) pair and Image object
 				PositionedImage pi = new PositionedImage(x, y, image.getImage());
+				// Check if the page has already been created
 				if (images.get(page) == null) {
 					images.put(page, new LinkedList<PositionedObject>());
 				}
+				// Add positioned object to page
 				images.get(page).add(pi);
 			}
 		}

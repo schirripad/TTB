@@ -58,6 +58,8 @@ public class CharacterBinder {
 			Hashtable<Integer, LinkedList<PositionedObject>> images) {
 		// TODO Add images into 'chars' at locations relative to their location in the
 		// original document
+
+		// Get the height of a glyph
 		double ratio = chars.get(0).get(0).getHeight(null) / CELL_HEIGHT;
 		Image page = new BufferedImage((int) (width * ratio), (int) (height * ratio), BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) page.getGraphics();
@@ -84,31 +86,48 @@ public class CharacterBinder {
 		}
 	}
 
+	/**
+	 * Bind all Images into a book of pages. This includes braille characters and
+	 * other Images
+	 * 
+	 * @param chars
+	 *            All Image objects to be bound, actual Imagery and braille glyphs
+	 */
 	// Bind all objects, images and chars
 	public void bindObjects(LinkedList<LinkedList<Image>> chars) {
 		// TODO Add images into 'chars' at locations relative to their location in the
 		// original document
 		// DONE
+
+		// Get the height width ratio of a glyph
 		double ratio = chars.get(0).get(0).getHeight(null) / CELL_HEIGHT;
+		// First glyph is always a space, remove it
 		chars.remove(0);
+		// Create a new page
 		Image page = new BufferedImage((int) (width * ratio), (int) (height * ratio), BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) page.getGraphics();
 		int hcount = 0;
+		// Iterate through all lines in the book
 		for (LinkedList<Image> line : chars) {
-			// TODO Deal with width/height differences when adding full size images
-
+			// TODO Deal with width/height differences when adding full size images:
+			// Done/untested...
 			// lH - Line Height
 			// lW - Line Width
 			int lH = 0, lW = 0;
+			// Iterate all characters in a line
 			for (int j = 0; j < line.size(); j++) {
 				Image i = line.get(j);
 				int imgH = i.getHeight(null);
 				int imgW = i.getWidth(null);
 
+				// If an image is taller than the available tallest object, set the tallest
+				// image counter to this value
 				if (imgH > lH)
 					lH = imgH;
+				// Increment the width counter
 				lW += imgW;
 
+				// If the object exceeds the line width bounds, start a new line
 				if (lW > page.getWidth(null)) {
 					lW = 0;
 					hcount++;

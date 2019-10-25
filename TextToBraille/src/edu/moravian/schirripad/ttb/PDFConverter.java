@@ -8,11 +8,13 @@ import java.util.LinkedList;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
-import org.apache.pdfbox.text.PDFTextStripper;
 
+import edu.moravian.edu.ttb.logging.Logger;
 import edu.moravian.schirripad.ttb.characters.CharacterSetLoader;
 
 public class PDFConverter {
+	public static boolean debug;
+	private static Logger log = new Logger("ConverterEngine");
 
 	public static void convert(String file, String output) throws InvalidPasswordException, IOException {
 		convert(new File(file), new File(output));
@@ -20,6 +22,10 @@ public class PDFConverter {
 
 	public static void convert(File f, File output) throws InvalidPasswordException, IOException {
 		convert(f, output, 210, 297, null, true);
+	}
+
+	public static void doDebug(boolean dbg) {
+		debug = dbg;
 	}
 
 	/**
@@ -48,16 +54,16 @@ public class PDFConverter {
 		// Load pdf
 		PDDocument pdf = PDDocument.load(f);
 		// Strip the text from the pdf
-		//PDFTextStripper textStripper = new PDFTextStripper();
-		//System.out.println("Stripping Text");
-		//String pdfText = textStripper.getText(pdf);
+		// PDFTextStripper textStripper = new PDFTextStripper();
+		// System.out.println("Stripping Text");
+		// String pdfText = textStripper.getText(pdf);
 
 		// Get all images from the pdf, assigned by their page number
 		PDFImageExtractor extractor = new PDFImageExtractor();
-		System.out.println("Extracting Images");
+		log.debug("Extracting Images");
 		Hashtable<Integer, LinkedList<PositionedObject>> images = extractor.extractImages(pdf);
 		// Cleanup
-		System.out.println("Cleaning Up");
+		log.debug("Cleaning Up");
 		extractor = null;
 		pdf.close();
 		pdf = null;
@@ -66,18 +72,18 @@ public class PDFConverter {
 		// CODEAT PDF->String done
 		// Attempt to parse the string representation of the pdf text into a series of
 		// braille characters
-		System.out.println("Parsing Characters");
+		log.debug("Parsing Characters");
 		LinkedList<LinkedList<Image>> text = StringParser.parseString(images);
-		//textStripper = null;
+		// textStripper = null;
 		// Bind the characters together into one image
-		System.out.println("Binding");
+		log.debug("Binding");
 		CharacterBinder binder = new CharacterBinder(width, height, output);
 		if (text == null || text.size() == 0) {
-			System.err.println("StringParser returned null, please check that the pdf is valid, and contains text");
+			log.err("StringParser returned null, please check that the pdf is valid, and contains text");
 			throw new NullPointerException("StringParser returned null");
 		}
 		if (convImages) {
-			System.out.println("Include Images");
+			log.debug("Include Images");
 			binder.bindObjects(text);
 		} else
 			binder.bindCharacters(text);

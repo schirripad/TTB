@@ -16,11 +16,13 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JCheckBox;
 
 public class PreferenceUI extends JFrame implements WindowListener {
 
 	private JPanel contentPane;
 	private JTextField textField;
+	private JCheckBox doDebug;
 	private MainUI main;
 
 	/**
@@ -39,10 +41,13 @@ public class PreferenceUI extends JFrame implements WindowListener {
 
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.WEST);
-		panel.setLayout(new MigLayout("", "[145px]", "[16px][]"));
+		panel.setLayout(new MigLayout("", "[145px]", "[16px][][][][][]"));
 
 		JLabel lblNewLabel = new JLabel("Character Set Location:");
 		panel.add(lblNewLabel, "cell 0 1,alignx left,aligny center");
+
+		JLabel lblDebug = new JLabel("Debug:");
+		panel.add(lblDebug, "cell 0 3");
 
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.CENTER);
@@ -72,17 +77,28 @@ public class PreferenceUI extends JFrame implements WindowListener {
 		JButton btnApply = new JButton("Apply");
 		btnApply.setActionCommand("applySettings");
 		btnApply.addActionListener(main);
+
+		doDebug = new JCheckBox("Debug");
+		GridBagConstraints gbc_chckbxNewCheckBox = new GridBagConstraints();
+		gbc_chckbxNewCheckBox.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxNewCheckBox.gridx = 0;
+		gbc_chckbxNewCheckBox.gridy = 3;
+		panel_1.add(doDebug, gbc_chckbxNewCheckBox);
 		GridBagConstraints gbc_btnApply = new GridBagConstraints();
 		gbc_btnApply.gridx = 0;
 		gbc_btnApply.gridy = 8;
 		panel_1.add(btnApply, gbc_btnApply);
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//setVisible(true);
+		// setVisible(true);
 	}
 
-	public String getSettings() {
+	public String getPath() {
 		return textField.getText();
+	}
+
+	public boolean doDebug() {
+		return doDebug.isSelected();
 	}
 
 	@Override

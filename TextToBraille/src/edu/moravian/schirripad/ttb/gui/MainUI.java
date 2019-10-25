@@ -42,6 +42,7 @@ public class MainUI extends JFrame implements ActionListener {
 	private File pdf, output;
 	private JFileChooser fc;
 	private File charSet = null;
+	private boolean doDebug = false;
 	private static PreferenceUI pui;
 
 	/**
@@ -220,7 +221,8 @@ public class MainUI extends JFrame implements ActionListener {
 			}
 			break;
 		case "applySettings":
-			charSet = new File(pui.getSettings());
+			charSet = new File(pui.getPath());
+			doDebug = pui.doDebug();
 			break;
 		case "convert":
 			// Check if already running
@@ -237,11 +239,12 @@ public class MainUI extends JFrame implements ActionListener {
 				break;
 			}
 			try {
-				SwingWorker sw = new SwingWorker<Void, Void>() {
+				SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>() {
 
 					@Override
 					protected Void doInBackground() throws Exception {
 						progressBar.setIndeterminate(true);
+						PDFConverter.doDebug(doDebug);
 						PDFConverter.convert(pdf, output, (int) spinnerWidth.getValue(), (int) spinnerHeight.getValue(),
 								charSet, chckbxConvertImages.isSelected());
 						progressBar.setIndeterminate(false);
