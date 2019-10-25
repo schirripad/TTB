@@ -29,6 +29,16 @@ public class PDFImageExtractor extends PDFStreamEngine {
 	private Logger log = new Logger("Extractor");
 	private int page = 0;
 
+	/**
+	 * Extract text and Images from a PDFDocument
+	 * 
+	 * @param pdf
+	 *            The PDDocument object to parse
+	 * @return Hashtable<Integer (Page Number), LinkedList<PositionedObject>
+	 *         (Line<Text/Images>)
+	 * @throws IOException
+	 *             Thrown if page cannot be processed
+	 */
 	public Hashtable<Integer, LinkedList<PositionedObject>> extractImages(PDDocument pdf) throws IOException {
 		images = new Hashtable<Integer, LinkedList<PositionedObject>>();
 		PDPageTree tree = pdf.getPages();
