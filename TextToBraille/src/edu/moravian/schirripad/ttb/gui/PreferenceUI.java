@@ -78,7 +78,7 @@ public class PreferenceUI extends JFrame implements WindowListener {
 		panel_1.add(btnApply, gbc_btnApply);
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setVisible(true);
+		//setVisible(true);
 	}
 
 	public String getSettings() {

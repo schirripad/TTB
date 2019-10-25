@@ -5,7 +5,7 @@ import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 
-public class PositionedImage extends Image {
+public class PositionedImage extends Image implements PositionedObject {
 	private float x, y;
 	private Image img;
 

@@ -55,12 +55,10 @@ public class CharacterBinder {
 	 *            image was extracted from
 	 */
 	public void bindCharacters(LinkedList<LinkedList<Image>> chars,
-			Hashtable<Integer, LinkedList<PositionedImage>> images) {
+			Hashtable<Integer, LinkedList<PositionedObject>> images) {
+		// TODO Add images into 'chars' at locations relative to their location in the
+		// original document
 		double ratio = chars.get(0).get(0).getHeight(null) / CELL_HEIGHT;
-		LinkedList<Image> bound = new LinkedList<Image>();
-		LinkedList<PositionedImage> imgs = null;
-		if (images != null)
-			imgs = images.get(0);
 		Image page = new BufferedImage((int) (width * ratio), (int) (height * ratio), BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) page.getGraphics();
 		int wcount = 0, hcount = 0, pcount = 0;
@@ -70,7 +68,6 @@ public class CharacterBinder {
 					wcount = 0;
 					hcount++;
 					if (hcount > columnCap) {
-						// bound.add(page);
 						PageWriter.pageDone(page, out);
 						page = new BufferedImage((int) (width * ratio), (int) (height * ratio),
 								BufferedImage.TYPE_INT_RGB);
@@ -78,13 +75,54 @@ public class CharacterBinder {
 						wcount = 0;
 						hcount = 0;
 						pcount++;
-						if (images != null)
-							imgs = images.get(pcount);
 					}
-				} 
+				}
 				// Draw characters
 				g.drawImage(i, wcount * i.getWidth(null), hcount * i.getHeight(null), null);
 				wcount++;
+			}
+		}
+	}
+
+	// Bind all objects, images and chars
+	public void bindObjects(LinkedList<LinkedList<Image>> chars) {
+		// TODO Add images into 'chars' at locations relative to their location in the
+		// original document
+		// DONE
+		double ratio = chars.get(0).get(0).getHeight(null) / CELL_HEIGHT;
+		chars.remove(0);
+		Image page = new BufferedImage((int) (width * ratio), (int) (height * ratio), BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = (Graphics2D) page.getGraphics();
+		int hcount = 0;
+		for (LinkedList<Image> line : chars) {
+			// TODO Deal with width/height differences when adding full size images
+
+			// lH - Line Height
+			// lW - Line Width
+			int lH = 0, lW = 0;
+			for (int j = 0; j < line.size(); j++) {
+				Image i = line.get(j);
+				int imgH = i.getHeight(null);
+				int imgW = i.getWidth(null);
+
+				if (imgH > lH)
+					lH = imgH;
+				lW += imgW;
+
+				if (lW > page.getWidth(null)) {
+					lW = 0;
+					hcount++;
+				}
+				if (hcount > columnCap) {
+					PageWriter.pageDone(page, out);
+					page = new BufferedImage((int) (width * ratio), (int) (height * ratio), BufferedImage.TYPE_INT_RGB);
+					g = (Graphics2D) page.getGraphics();
+					lW = 0;
+					hcount += lH;
+					lH = 0;
+				}
+				// Draw characters
+				g.drawImage(i, lW, hcount * i.getHeight(null), null);
 			}
 		}
 	}

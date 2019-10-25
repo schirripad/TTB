@@ -48,14 +48,14 @@ public class PDFConverter {
 		// Load pdf
 		PDDocument pdf = PDDocument.load(f);
 		// Strip the text from the pdf
-		PDFTextStripper textStripper = new PDFTextStripper();
-		System.out.println("Stripping Text");
-		String pdfText = textStripper.getText(pdf);
+		//PDFTextStripper textStripper = new PDFTextStripper();
+		//System.out.println("Stripping Text");
+		//String pdfText = textStripper.getText(pdf);
 
 		// Get all images from the pdf, assigned by their page number
 		PDFImageExtractor extractor = new PDFImageExtractor();
 		System.out.println("Extracting Images");
-		Hashtable<Integer, LinkedList<PositionedImage>> images = extractor.extractImages(pdf);
+		Hashtable<Integer, LinkedList<PositionedObject>> images = extractor.extractImages(pdf);
 		// Cleanup
 		System.out.println("Cleaning Up");
 		extractor = null;
@@ -67,8 +67,8 @@ public class PDFConverter {
 		// Attempt to parse the string representation of the pdf text into a series of
 		// braille characters
 		System.out.println("Parsing Characters");
-		LinkedList<LinkedList<Image>> text = StringParser.parseString(pdfText, textStripper.getPageEnd());
-		textStripper = null;
+		LinkedList<LinkedList<Image>> text = StringParser.parseString(images);
+		//textStripper = null;
 		// Bind the characters together into one image
 		System.out.println("Binding");
 		CharacterBinder binder = new CharacterBinder(width, height, output);
@@ -78,7 +78,7 @@ public class PDFConverter {
 		}
 		if (convImages) {
 			System.out.println("Include Images");
-			binder.bindCharacters(text, images);
+			binder.bindObjects(text);
 		} else
 			binder.bindCharacters(text);
 	}
