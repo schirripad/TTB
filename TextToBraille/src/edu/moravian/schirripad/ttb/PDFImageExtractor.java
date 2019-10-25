@@ -12,7 +12,6 @@ import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSName;
-import org.apache.pdfbox.cos.COSNumber;
 import org.apache.pdfbox.cos.COSString;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -29,7 +28,6 @@ public class PDFImageExtractor extends PDFStreamEngine {
 	private Hashtable<Integer, LinkedList<PositionedObject>> images;
 	private Logger log = new Logger("Extractor");
 	private int page = 0;
-	private Vector curDisp;
 
 	public Hashtable<Integer, LinkedList<PositionedObject>> extractImages(PDDocument pdf) throws IOException {
 		images = new Hashtable<Integer, LinkedList<PositionedObject>>();

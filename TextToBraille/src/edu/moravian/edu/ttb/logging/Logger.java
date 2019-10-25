@@ -141,8 +141,8 @@ public class Logger implements Serializable {
 	 */
 	public void debug(String s, PrintStream out) {
 		if (debug)
-			log("[DEBUG] " + s + " @:" + LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + ":"
-					+ LocalDateTime.now().getSecond(), out);
+			log("[DEBUG] " + LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + ":"
+					+ LocalDateTime.now().getSecond() + "> " + s, out);
 	}
 
 	/**
