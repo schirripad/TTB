@@ -5,6 +5,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import edu.moravian.edu.ttb.book.Book;
+import edu.moravian.edu.ttb.book.Page;
 import edu.moravian.edu.ttb.logging.Logger;
 import edu.moravian.schirripad.ttb.characters.CharacterSetLoader;
 
@@ -18,15 +20,15 @@ public class StringParser {
 	 *            The String to convert
 	 * @return A LinkedList of LinkedLists, each being a separate line
 	 */
-	public static LinkedList<LinkedList<Image>> parseString(String fullText, String pageDelineator) {
+	public static Book parseString(String fullText, String pageDelineator) {
 		log.debug("Stripping");
 		// TODO Bind characters based on page, using delineator provided
-		LinkedList<LinkedList<Image>> total = new LinkedList<LinkedList<Image>>();
+		Book total = new Book();
 		String[] full = fullText.split(pageDelineator);
 		for (String text : full) {
 			text = text.toLowerCase();
 			char[] asChars = text.toCharArray();
-			LinkedList<Image> line = new LinkedList<Image>();
+			Page line = new Page();
 			final Hashtable<Character, Image> charSet = CharacterSetLoader.getCharacterSet();
 			for (char c : asChars) {
 				if (charSet.containsKey(c)) {
@@ -42,19 +44,19 @@ public class StringParser {
 	}
 
 	// Use for image extracted datasets
-	public static LinkedList<LinkedList<Image>> parseString(Hashtable<Integer, LinkedList<PositionedObject>> all) {
+	public static Book parseString(Hashtable<Integer, LinkedList<PositionedObject>> all) {
 		log.debug("Stripping");
 		// Load the braille character glyphs
 		final Hashtable<Character, Image> charSet = CharacterSetLoader.getCharacterSet();
 		// Create a linkedlist representing the entire book
-		LinkedList<LinkedList<Image>> total = new LinkedList<LinkedList<Image>>();
+		Book total = new Book();
 		Iterator<Integer> it = all.keySet().iterator();
 		// Iterate through all pages, and convert them into glyphs
 		while (it.hasNext()) {
 			// tot is a complete line of uninterpreted data
 			LinkedList<PositionedObject> tot = all.get(it.next());
 			// lines will be filled with glyphs and images
-			LinkedList<Image> lines = new LinkedList<Image>();
+			Page lines = new Page();
 			// Separate Text from Imagery, and deal with them independently, while keeping
 			// the original ordering
 			for (PositionedObject o : tot) {

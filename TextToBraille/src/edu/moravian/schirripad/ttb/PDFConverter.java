@@ -1,6 +1,5 @@
 package edu.moravian.schirripad.ttb;
 
-import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
@@ -9,6 +8,7 @@ import java.util.LinkedList;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 
+import edu.moravian.edu.ttb.book.Book;
 import edu.moravian.edu.ttb.logging.Logger;
 import edu.moravian.schirripad.ttb.characters.CharacterSetLoader;
 
@@ -46,6 +46,8 @@ public class PDFConverter {
 	 */
 	public static void convert(File f, File output, int width, int height, File charSet, boolean convImages)
 			throws InvalidPasswordException, IOException {
+		// TODO Separate image extraction and string based processing rather than doing
+		// both and only using part of the data
 		try {
 			CharacterSetLoader.loadCharacterSet(charSet);
 		} catch (Exception e) {
@@ -73,7 +75,7 @@ public class PDFConverter {
 		// Attempt to parse the string representation of the pdf text into a series of
 		// braille characters
 		log.debug("Parsing Characters");
-		LinkedList<LinkedList<Image>> text = StringParser.parseString(images);
+		Book text = StringParser.parseString(images);
 		// textStripper = null;
 		// Bind the characters together into one image
 		log.debug("Binding");

@@ -7,6 +7,8 @@ import java.io.File;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
+import edu.moravian.edu.ttb.book.Book;
+
 public class CharacterBinder {
 
 	/**
@@ -37,7 +39,7 @@ public class CharacterBinder {
 	 * @param chars
 	 *            List of Images (glyphs) representing braille characters, in order
 	 */
-	public void bindCharacters(LinkedList<LinkedList<Image>> chars) {
+	public void bindCharacters(Book chars) {
 		bindCharacters(chars, null);
 	}
 
@@ -54,8 +56,7 @@ public class CharacterBinder {
 	 *            from the pdf, so that the key to each value is the page number the
 	 *            image was extracted from
 	 */
-	public void bindCharacters(LinkedList<LinkedList<Image>> chars,
-			Hashtable<Integer, LinkedList<PositionedObject>> images) {
+	public void bindCharacters(Book chars, Hashtable<Integer, LinkedList<PositionedObject>> images) {
 		// TODO Add images into 'chars' at locations relative to their location in the
 		// original document
 
@@ -94,7 +95,7 @@ public class CharacterBinder {
 	 *            All Image objects to be bound, actual Imagery and braille glyphs
 	 */
 	// Bind all objects, images and chars
-	public void bindObjects(LinkedList<LinkedList<Image>> chars) {
+	public void bindObjects(Book chars) {
 		// TODO Add images into 'chars' at locations relative to their location in the
 		// original document
 		// DONE
