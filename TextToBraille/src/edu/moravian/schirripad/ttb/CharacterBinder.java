@@ -14,7 +14,7 @@ public class CharacterBinder {
 	/**
 	 * 
 	 * @param width
-	 *            Width of pages to bind to in millimeters
+	 *            Width of pages to bind together in millimeters
 	 * @param height
 	 *            Height of pages to bind in millimeters
 	 * @param output
