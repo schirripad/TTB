@@ -26,6 +26,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import edu.moravian.edu.ttb.logging.Logger;
 import edu.moravian.schirripad.ttb.PDFConverter;
 import net.miginfocom.swing.MigLayout;
 
@@ -44,6 +45,7 @@ public class MainUI extends JFrame implements ActionListener {
 	private File charSet = null;
 	private boolean doDebug = false;
 	private static PreferenceUI pui;
+	private static Logger log = new Logger("MainUI");
 
 	/**
 	 * Launch the application.
@@ -204,21 +206,28 @@ public class MainUI extends JFrame implements ActionListener {
 			pui.setVisible(true);
 			break;
 		case "selOut":
+			log.debug("Output file selection opened...");
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			int resp = fc.showOpenDialog(this);
 			if (resp == JFileChooser.APPROVE_OPTION) {
 				output = fc.getSelectedFile();
 				textField_1.setText(output.getPath());
+				log.debug("Got file: " + output.getAbsolutePath());
+				break;
 			}
+			log.debug("Canceled file selection...");
 			break;
 		case "selPDF":
+			log.debug("PDF file selection opened...");
 			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			int resp0 = fc.showOpenDialog(this);
 			if (resp0 == JFileChooser.APPROVE_OPTION) {
 				pdf = fc.getSelectedFile();
-				System.out.println(pdf.getPath());
 				textField.setText(pdf.getPath());
+				log.debug("Got PDF: " + pdf.getAbsolutePath());
+				break;
 			}
+			log.debug("Canceled file selection...");
 			break;
 		case "applySettings":
 			charSet = new File(pui.getPath());
@@ -243,6 +252,7 @@ public class MainUI extends JFrame implements ActionListener {
 
 					@Override
 					protected Void doInBackground() throws Exception {
+						log.debug("Beginning conversion...");
 						progressBar.setIndeterminate(true);
 						PDFConverter.doDebug(doDebug);
 						PDFConverter.convert(pdf, output, (int) spinnerWidth.getValue(), (int) spinnerHeight.getValue(),

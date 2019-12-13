@@ -9,9 +9,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import edu.moravian.edu.ttb.logging.Logger;
+
 public class PageWriter {
 
 	private static int pCount = 0;
+	private static Logger log =  new Logger("PageWriter");
 
 	/**
 	 * Writes an Image (page) to the output directory
@@ -22,7 +25,7 @@ public class PageWriter {
 	 *            Directory which to write to
 	 */
 	public static void pageDone(Image page, File output) {
-		System.out.println("Writing: " + output.getPath() + "/" + pCount + ".png");
+		log.debug("Writing: " + output.getPath() + "/" + pCount + ".png");
 		try {
 			ImageIO.write((RenderedImage) page, "PNG", new FileOutputStream(new File(output, pCount + ".png")));
 		} catch (FileNotFoundException e) {

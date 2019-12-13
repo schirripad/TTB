@@ -7,16 +7,16 @@ import java.awt.Insets;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import edu.moravian.edu.ttb.logging.Logger;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JCheckBox;
 
 public class PreferenceUI extends JFrame implements WindowListener {
 
@@ -24,6 +24,7 @@ public class PreferenceUI extends JFrame implements WindowListener {
 	private JTextField textField;
 	private JCheckBox doDebug;
 	private MainUI main;
+	private Logger log = new Logger("PrefenceUI");
 
 	/**
 	 * Create the frame.
@@ -99,6 +100,12 @@ public class PreferenceUI extends JFrame implements WindowListener {
 
 	public boolean doDebug() {
 		return doDebug.isSelected();
+	}
+	
+	@Override
+	public void setVisible(boolean vis) {
+		super.setVisible(vis);
+		log.debug("Opened preference frame...");
 	}
 
 	@Override

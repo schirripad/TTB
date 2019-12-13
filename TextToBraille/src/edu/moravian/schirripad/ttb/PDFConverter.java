@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 
@@ -25,6 +27,7 @@ public class PDFConverter {
 	}
 
 	public static void doDebug(boolean dbg) {
+		log.debug("Debugging Enabled!");
 		debug = dbg;
 	}
 
@@ -52,6 +55,8 @@ public class PDFConverter {
 			CharacterSetLoader.loadCharacterSet(charSet);
 		} catch (Exception e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Failed to load braille character set!");
+			return;
 		}
 		// Load pdf
 		PDDocument pdf = PDDocument.load(f);

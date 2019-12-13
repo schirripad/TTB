@@ -40,14 +40,17 @@ public class PDFImageExtractor extends PDFStreamEngine {
 	 *             Thrown if page cannot be processed
 	 */
 	public Hashtable<Integer, LinkedList<PositionedObject>> extractImages(PDDocument pdf) throws IOException {
+		log.debug("Simple extraction selected...");
 		images = new Hashtable<Integer, LinkedList<PositionedObject>>();
 		PDPageTree tree = pdf.getPages();
 		Iterator<PDPage> pages = tree.iterator();
+		log.debug("Performing simple extraction...");
 		while (pages.hasNext()) {
 			PDPage page = pages.next();
 			this.processPage(page);
 			this.page++;
 		}
+		log.debug("Simple extraction complete!");
 		return images;
 	}
 
