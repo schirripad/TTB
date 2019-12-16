@@ -4,10 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.SplashScreen;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -46,6 +49,7 @@ public class MainUI extends JFrame implements ActionListener {
 	private boolean doDebug = false;
 	private static PreferenceUI pui;
 	private static Logger log = new Logger("MainUI");
+	private static final SplashScreen splash = SplashScreen.getSplashScreen();
 
 	/**
 	 * Launch the application.
@@ -54,6 +58,17 @@ public class MainUI extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					if (splash == null) {
+						log.debug("Failed to get SplashScreen instance!");
+					} else {
+						Graphics2D g = splash.createGraphics();
+						if (g == null) {
+							log.debug("Failed to get graphics object for SplashScreen");
+						} else {
+							g.drawString("Loading...", 0, 0);
+							splash.update();
+						}
+					}
 					MainUI frame = new MainUI();
 					pui = new PreferenceUI(frame);
 					frame.setVisible(true);
